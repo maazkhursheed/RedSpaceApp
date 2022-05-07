@@ -12,15 +12,14 @@ import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-interface RetrofitService {
+class RetrofitService {
+
+    val charactersResponse: MutableLiveData<Characters> = MutableLiveData()
+    val episodesResponse: MutableLiveData<Episodes> = MutableLiveData()
+    val locationsResponse: MutableLiveData<Locations> = MutableLiveData()
 
     companion object Factory {
-
-        val charactersResponse: MutableLiveData<CharactersList> = MutableLiveData()
-        val locationsResponse: MutableLiveData<LocationsList> = MutableLiveData()
-        val episodesResponse: MutableLiveData<EpisodesList> = MutableLiveData()
         var gson = GsonBuilder().setLenient().create()
-
         fun create(): ApiInterface {
 
             val retrofit = Retrofit.Builder()
@@ -31,63 +30,81 @@ interface RetrofitService {
 
             return retrofit.create(ApiInterface::class.java)
         }
+    }
 
-        fun loadCharactersData(): MutableLiveData<CharactersList>? {
+    fun loadCharactersData(): MutableLiveData<Characters>? {
 
-            val retrofitCall  = create().getAllCharacters()
+        val retrofitCall  = create().getAllCharacters()
 
-            retrofitCall.enqueue(object : Callback<CharactersList> {
-                override fun onFailure(call: Call<CharactersList>, t: Throwable?) {
-                    Log.e("", t.toString())
-                }
+        retrofitCall.enqueue(object : Callback<Characters> {
+            override fun onFailure(call: Call<Characters>, t: Throwable?) {
+                Log.e("on Failure :", "retrofit error")
+            }
 
-                override fun onResponse(call: Call<CharactersList>, response: retrofit2.Response<CharactersList>) {
+            override fun onResponse(call: Call<Characters>, response: retrofit2.Response<Characters>) {
 
-                    val list  = response.body()
-                    charactersResponse.value = list
-                }
+                val list  = response.body()
+                charactersResponse.value = list
 
-            })
+                Log.e("hasActiveObservers 1", charactersResponse.hasActiveObservers().toString()+" check")
 
-            return charactersResponse
-        }
+                Log.e("on response 2 :", charactersResponse.toString()+" check")
 
-        fun loadLocationsData(): MutableLiveData<LocationsList>? {
+            }
 
-            val retrofitCall  = create().getAllLocations()
+        })
 
-            retrofitCall.enqueue(object : Callback<LocationsList> {
-                override fun onFailure(call: Call<LocationsList>, t: Throwable?) {
-                }
+        return charactersResponse
+    }
 
-                override fun onResponse(call: Call<LocationsList>, response: retrofit2.Response<LocationsList>) {
+    fun loadEpisodesData(): MutableLiveData<Episodes>? {
 
-                    val list  = response.body()
-                    locationsResponse.value = list
-                }
+        val retrofitCall  = create().getAllEpisodes()
 
-            })
+        retrofitCall.enqueue(object : Callback<Episodes> {
+            override fun onFailure(call: Call<Episodes>, t: Throwable?) {
+                Log.e("on Failure :", "retrofit error")
+            }
 
-            return locationsResponse
-        }
+            override fun onResponse(call: Call<Episodes>, response: retrofit2.Response<Episodes>) {
 
-        fun loadEpisodesData(): MutableLiveData<EpisodesList>? {
+                val list  = response.body()
+                episodesResponse.value = list
 
-            val retrofitCall  = create().getAllEpisodes()
+                Log.e("hasActiveObservers 1", episodesResponse.hasActiveObservers().toString()+" check")
 
-            retrofitCall.enqueue(object : Callback<EpisodesList> {
-                override fun onFailure(call: Call<EpisodesList>, t: Throwable?) {
-                }
+                Log.e("on response 2 :", episodesResponse.toString()+" check")
 
-                override fun onResponse(call: Call<EpisodesList>, response: retrofit2.Response<EpisodesList>) {
+            }
 
-                    val list  = response.body()
-                    episodesResponse.value = list
-                }
+        })
 
-            })
+        return episodesResponse
+    }
 
-            return episodesResponse
-        }
+    fun loadLocationsData(): MutableLiveData<Locations>? {
+
+        val retrofitCall  = create().getAllLocations()
+
+        retrofitCall.enqueue(object : Callback<Locations> {
+            override fun onFailure(call: Call<Locations>, t: Throwable?) {
+                Log.e("on Failure :", "retrofit error")
+            }
+
+            override fun onResponse(call: Call<Locations>, response: retrofit2.Response<Locations>) {
+
+                val list  = response.body()
+                locationsResponse.value = list
+
+                Log.e("hasActiveObservers 1", locationsResponse.hasActiveObservers().toString()+" check")
+
+                Log.e("on response 2 :", locationsResponse.toString()+" check")
+
+            }
+
+        })
+
+        return locationsResponse
     }
 }
+
