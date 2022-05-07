@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         val charactersViewModel = ViewModelProviders.of(this@MainActivity).get(CharactersViewModel::class.java)
         charactersViewModel.getCharactersData()?.observe(this, Observer<Characters>{ charactersList ->
 
-            charactersList?.toString()?.let { Log.e("list", it) }
+            charactersList?.toString()
         })
     }
 }
