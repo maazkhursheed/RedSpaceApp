@@ -30,6 +30,7 @@ class CharactersListAdapter(private val charactersList: ArrayList<CharacterResul
         holder.characterStatus?.text = charactersList[position].status
         holder.characterGender?.text = charactersList[position].gender
         holder.characterData?.text = charactersList[position].species +"\n"+ charactersList[position].type
+        holder.characterLink?.text = "For more CLICK HERE"
 
         Glide.with(holder.itemView.context).load(charactersList[position].image).placeholder(R.drawable.image)
             .into(holder.characterImage)
@@ -49,6 +50,7 @@ class CharactersListAdapter(private val charactersList: ArrayList<CharacterResul
         val characterStatus: TextView = view.findViewById(R.id.characterStatus)
         val characterGender: TextView = view.findViewById(R.id.characterGender)
         val characterData: TextView = view.findViewById(R.id.characterData)
+        val characterLink: TextView = view.findViewById(R.id.characterLink)
         val mView = view
     }
 
