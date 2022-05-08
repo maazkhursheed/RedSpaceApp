@@ -1,5 +1,7 @@
 package com.example.myredspaceapplication.fragments
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -23,6 +25,7 @@ import com.example.myredspaceapplication.viewmodel.EpisodesViewModel
 
 class EpisodesFragment : Fragment() {
     private lateinit var rv_episodes_list: RecyclerView
+    val positiveButtonClick = { dialog: DialogInterface, which: Int -> }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,11 +42,23 @@ class EpisodesFragment : Fragment() {
         episodesViewModel.getEpisodesData()?.observe(viewLifecycleOwner, Observer<Episodes>{ episodesList ->
             rv_episodes_list.adapter = EpisodesListAdapter(episodesList.results as ArrayList<EpisodeResults>, object : ItemClickListener {
                 override fun onItemClick(pos: Int) {
-                    Toast.makeText(activity,"item $pos clicked", Toast.LENGTH_LONG).show()
+                    showItemsDialog(pos,episodesList.results)
                 }
             })
             rv_episodes_list.layoutManager = LinearLayoutManager(itemView.context)
             rv_episodes_list.setHasFixedSize(true)
         })
+    }
+
+    private fun showItemsDialog(pos: Int, results: ArrayList<EpisodeResults>) {
+        val items = arrayOf("Created at: " + results[pos].created, "Characters: " + results[pos].characters)
+        val builder = AlertDialog.Builder(this.context)
+        with(builder)
+        {
+            setTitle(results[pos].name)
+            setItems(items) { dialog, which -> }
+            setPositiveButton("OK", positiveButtonClick)
+            show()
+        }
     }
 }

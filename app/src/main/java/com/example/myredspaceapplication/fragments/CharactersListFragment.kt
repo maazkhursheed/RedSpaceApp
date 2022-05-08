@@ -1,5 +1,7 @@
 package com.example.myredspaceapplication.fragments
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -19,6 +21,8 @@ import com.example.myredspaceapplication.viewmodel.CharactersViewModel
 
 class CharactersListFragment : Fragment() {
     private lateinit var rv_characters_list: RecyclerView
+    val positiveButtonClick = { dialog: DialogInterface, which: Int -> }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,9 +39,7 @@ class CharactersListFragment : Fragment() {
         charactersViewModel.getCharactersData()?.observe(viewLifecycleOwner, Observer<Characters>{ charactersList ->
             rv_characters_list.adapter = CharactersListAdapter(charactersList.results as ArrayList<CharacterResults>, object : ItemClickListener {
                 override fun onItemClick(pos: Int) {
-                    Toast.makeText(activity,"item $pos clicked", Toast.LENGTH_LONG).show()
-                    val fragment = EpisodesFragment()
-                    showFragment(fragment)
+                    showItemsDialog(pos,charactersList.results)
                 }
             })
             rv_characters_list.layoutManager = LinearLayoutManager(itemView.context)
@@ -45,10 +47,16 @@ class CharactersListFragment : Fragment() {
         })
     }
 
-    private fun showFragment(fragment: EpisodesFragment) {
-        val fram = activity?.supportFragmentManager?.beginTransaction()
-        fram?.replace(R.id.main_container,fragment)
-        fram?.commit()
+    private fun showItemsDialog(pos: Int, results: ArrayList<CharacterResults>) {
+        val items = arrayOf("Origin: " + results[pos].origin.name, "Location: " + results[pos].location.name, "Created at: " + results[pos].created)
+        val builder = AlertDialog.Builder(this.context)
+        with(builder)
+        {
+            setTitle(results[pos].name)
+            setItems(items) { dialog, which -> }
+            setPositiveButton("OK", positiveButtonClick)
+            show()
+        }
 
     }
 }

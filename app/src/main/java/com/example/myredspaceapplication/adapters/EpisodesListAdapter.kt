@@ -3,10 +3,8 @@ package com.example.myredspaceapplication.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.myredspaceapplication.R
 import com.example.myredspaceapplication.interfaces.ItemClickListener
 import com.example.myredspaceapplication.model.EpisodeResults
@@ -28,6 +26,7 @@ class EpisodesListAdapter(private val episodesList: ArrayList<EpisodeResults>, p
         holder.episodeTitle?.text = episodesList[position].name
         holder.episodeAirDate?.text = episodesList[position].air_date
         holder.episodeCode?.text = episodesList[position].episode
+        holder.characterLink?.text = "For more CLICK HERE"
 
         RxView.clicks(holder.mView).subscribe {
             mItemClickListener!!.onItemClick(position)
@@ -42,6 +41,7 @@ class EpisodesListAdapter(private val episodesList: ArrayList<EpisodeResults>, p
         val episodeTitle: TextView = view.findViewById(R.id.episodeTitle)
         val episodeAirDate: TextView = view.findViewById(R.id.episodeAirDate)
         val episodeCode: TextView = view.findViewById(R.id.episodeCode)
+        val characterLink: TextView = view.findViewById(R.id.characterLink)
         val mView = view
     }
 
